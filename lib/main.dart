@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -12,9 +13,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Solid Software Task',
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Solid software task'),
     );
   }
 }
@@ -30,17 +31,31 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  int a = 100;
+  int a = 0;
   int b = 0;
   int c = 0;
   int d = 0;
+  Timer? _colorTimer;
   void _incrementCounter() {
     setState(() {
       _counter++;
       b = Random().nextInt(256);
       c = Random().nextInt(256);
-      d = Random().nextInt(256);
+      a = Random().nextInt(256);
     });
+  }
+
+  void _startSmoothColorChange(LongPressStartDetails details) {
+    _colorTimer?.cancel();
+
+    _colorTimer = Timer.periodic(const Duration(milliseconds: 1000), (timer) {
+      _incrementCounter();
+    });
+  }
+
+  void _stopSmoothColorChange(LongPressEndDetails details) {
+    _colorTimer?.cancel();
+    _colorTimer = null;
   }
 
   @override
@@ -52,13 +67,16 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: GestureDetector(
         onTap: _incrementCounter,
-        child: Container(
+        onLongPressStart: _startSmoothColorChange,
+        onLongPressEnd: _stopSmoothColorChange,
+        child: AnimatedContainer(
           width: double.infinity,
           height: double.infinity,
-
-          color: Color.fromARGB(100, b, c, d),
+          duration: const Duration(milliseconds: 1000),
+          curve: Curves.easeInOut,
+          color: Color.fromRGBO(a, b, c, 1),
           child: Column(
-            mainAxisAlignment: .center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text('Color have been changed this many times:'),
               Text(
