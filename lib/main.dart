@@ -30,29 +30,33 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   int a = 0;
   int b = 0;
   int c = 0;
-  int d = 0;
+  // Change the duration here to adjust how quickly the color changes when long-pressing the screen
+  static const int duration = 250;
   Timer? _colorTimer;
-  void _incrementCounter() {
+  // This method changes the color once by generating random RGB values
+  void _changeColourOnce() {
     setState(() {
-      _counter++;
+      a = Random().nextInt(256);
       b = Random().nextInt(256);
       c = Random().nextInt(256);
-      a = Random().nextInt(256);
     });
   }
 
+  // This method starts a timer that changes the color every 300 milliseconds when the user long-presses the screen
   void _startSmoothColorChange(LongPressStartDetails details) {
     _colorTimer?.cancel();
 
-    _colorTimer = Timer.periodic(const Duration(milliseconds: 1000), (timer) {
-      _incrementCounter();
+    _colorTimer = Timer.periodic(const Duration(milliseconds: duration), (
+      timer,
+    ) {
+      _changeColourOnce();
     });
   }
 
+  // This method stops the timer when the user releases the long-press
   void _stopSmoothColorChange(LongPressEndDetails details) {
     _colorTimer?.cancel();
     _colorTimer = null;
@@ -66,23 +70,34 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: GestureDetector(
-        onTap: _incrementCounter,
+        onTap: _changeColourOnce,
         onLongPressStart: _startSmoothColorChange,
         onLongPressEnd: _stopSmoothColorChange,
+        // The AnimatedContainer widget smoothly transitions between colors when the RGB values change
         child: AnimatedContainer(
           width: double.infinity,
           height: double.infinity,
-          duration: const Duration(milliseconds: 1000),
+          duration: const Duration(milliseconds: duration),
           curve: Curves.easeInOut,
           color: Color.fromRGBO(a, b, c, 1),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Color have been changed this many times:'),
               Text(
-                '$_counter',
+                'Hello there',
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
+              /* 
+              Following code displays the current RGB values of the color
+              */
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 30),
+              //   child: Text('Current color is:'),
+              // ),
+              // Text(
+              //   'RGB($a, $b, $c)',
+              //   style: Theme.of(context).textTheme.headlineMedium,
+              // ),
             ],
           ),
         ),
