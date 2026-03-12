@@ -14,7 +14,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Solid Software Task',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      ),
       home: const MyHomePage(title: 'Solid software task'),
     );
   }
@@ -30,18 +32,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int a = 0;
-  int b = 0;
-  int c = 0;
+  int red = 0;
+  int green = 0;
+  int blue = 0;
   // Change the duration here to adjust how quickly the color changes when long-pressing the screen
   static const int duration = 250;
   Timer? _colorTimer;
   // This method changes the color once by generating random RGB values
   void _changeColourOnce() {
     setState(() {
-      a = Random().nextInt(256);
-      b = Random().nextInt(256);
-      c = Random().nextInt(256);
+      red = Random().nextInt(256);
+      green = Random().nextInt(256);
+      blue = Random().nextInt(256);
     });
   }
 
@@ -79,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
           height: double.infinity,
           duration: const Duration(milliseconds: duration),
           curve: Curves.easeInOut,
-          color: Color.fromRGBO(a, b, c, 1),
+          color: Color.fromRGBO(red, green, blue, 1),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
